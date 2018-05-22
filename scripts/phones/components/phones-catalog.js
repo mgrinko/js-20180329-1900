@@ -4,10 +4,11 @@ export default class PhonesCatalogue {
   constructor({ element, phones }) {
     this._element = element;
     this._phones = phones;
-
     this._onPhoneClick = this._onPhoneClick.bind(this);
 
-    this._render();
+    this
+      ._sort(document.querySelector('[data-component="phones-sorting"]').value)
+      ._render();
 
     this._element.addEventListener('click', this._onPhoneClick);
   }
@@ -28,6 +29,17 @@ export default class PhonesCatalogue {
     });
 
     this._element.dispatchEvent(customEvent);
+  }
+
+  _sort(value) {
+    this._phones.sort((a, b) => {
+      var textA = a[value].toString().toUpperCase();
+      var textB = b[value].toString().toUpperCase();
+
+      return textA.localeCompare(textB, undefined, {numeric: true, sensitivity: 'base'})
+    });
+
+    return this;
   }
 
   _render() {
