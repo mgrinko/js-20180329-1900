@@ -34,16 +34,12 @@ export default class PhonesCatalogue extends MainComponent {
         let query = event.detail;
 
         [].forEach.call(this._element.querySelectorAll('.thumbnail'), function (element) {
-            if (element.hidden) {
-                element.hidden = false;
-            }
+           element.classList.toggle("hidden",false);
         });
 
         this._phones.forEach((phone) => {
-            if (!phone.id.includes(query)) {
-                let element = this._element.querySelector(`[data-phone-id="${phone.id}"]`);
-                element.hidden = true;
-            }
+            let element = this._element.querySelector(`[data-phone-id="${phone.id}"]`);
+            element.classList.toggle("hidden", !phone.id.includes(query));
         });
 
     }
