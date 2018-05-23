@@ -1,9 +1,12 @@
 'use strict';
+import MainComponent from "./main-component";
 
-export default class PhonesCatalogue {
+export default class PhonesCatalogue extends  MainComponent {
   constructor({ element, phones }) {
-    this._element = element;
+    super(element)
+
     this._phones = phones;
+    this._element = element;
 
     this._onPhoneClick = this._onPhoneClick.bind(this);
 
@@ -12,9 +15,6 @@ export default class PhonesCatalogue {
     this._element.addEventListener('click', this._onPhoneClick);
   }
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
-  }
 
   _onPhoneClick(event) {
     let phoneElement = event.target.closest('[data-element="phone"]');
