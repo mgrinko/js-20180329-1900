@@ -25,12 +25,12 @@
         <section>
           <p>
             Search:
-            <input>
+            <input data-component="phones-search">
           </p>
 
           <p>
             Sort by:
-            <select>
+            <select data-component="phones-sorting">
               <option value="name">Alphabetical</option>
               <option value="age">Newest</option>
             </select>
@@ -50,6 +50,7 @@
       <div class="col-md-10">
         <!--Body content-->
         <div data-component="phones-catalog"></div>
+        <div data-search-info class="hidden">Ничего не найдено</div>
 
       </div>
 

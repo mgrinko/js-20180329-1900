@@ -1,19 +1,19 @@
 'use strict';
+import MainComponent from './main-component.js';
 
-export default class PhonesCatalogue {
+export default class PhonesCatalogue extends MainComponent{
   constructor({ element, phones }) {
+    super(element);
+
     this._element = element;
     this._phones = phones;
-
     this._onPhoneClick = this._onPhoneClick.bind(this);
 
-    this._render();
+    this
+      ._sort(document.querySelector('[data-component="phones-sorting"]').value)
+      ._render();
 
     this._element.addEventListener('click', this._onPhoneClick);
-  }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
   }
 
   _onPhoneClick(event) {
@@ -28,6 +28,31 @@ export default class PhonesCatalogue {
     });
 
     this._element.dispatchEvent(customEvent);
+  }
+
+  _sort(value) {
+    this._phones.sort((a, b) => {
+      var textA = a[value].toString().toUpperCase();
+      var textB = b[value].toString().toUpperCase();
+
+      return textA.localeCompare(textB, undefined, {numeric: true, sensitivity: 'base'})
+    });
+
+    return this;
+  }
+
+  _search(query) {
+    for (const phone of this._phones) {
+      this._element.querySelector(`[data-phone-id="${phone.id}"]`)
+        .classList
+        .toggle('hidden', !phone.name.toUpperCase().includes(query.toUpperCase()));
+    }
+
+    document.querySelector('[data-search-info]')
+      .classList
+      .toggle('hidden', this._element.querySelectorAll('.hidden').length <  Object.keys(this._phones).length);
+  
+    return this;
   }
 
   _render() {
