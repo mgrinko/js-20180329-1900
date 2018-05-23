@@ -3,6 +3,7 @@
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import PhonesSorting from './components/phones-sorting.js';
+import PhonesSearch from './components/phones-search.js';
 
 export default class PhonesPage {
   constructor({ element }) {
@@ -30,6 +31,16 @@ export default class PhonesPage {
           ._sort(event.detail)
           ._render();
       });
+
+      this._search = new PhonesSearch({
+        element: this._element.querySelector('[data-component="phones-search"]')
+      });
+
+      this._search.on('phoneSearch', (event) => {
+        this._catalogue
+          ._search(event.detail);
+      });
+
     });
 
   }

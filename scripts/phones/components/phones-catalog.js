@@ -41,6 +41,20 @@ export default class PhonesCatalogue extends MainComponent{
     return this;
   }
 
+  _search(query) {
+    for (const phone of this._phones) {
+      this._element.querySelector(`[data-phone-id="${phone.id}"]`)
+        .classList
+        .toggle('hidden', !phone.name.toUpperCase().includes(query.toUpperCase()));
+    }
+
+    document.querySelector('[data-search-info]')
+      .classList
+      .toggle('hidden', this._element.querySelectorAll('.hidden').length <  Object.keys(this._phones).length);
+  
+    return this;
+  }
+
   _render() {
     this._element.innerHTML = `
       <ul class="phones">
