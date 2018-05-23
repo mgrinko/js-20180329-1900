@@ -2,12 +2,10 @@
 import MainComponent from './main-component.js';
 
 export default class PhonesSorting extends MainComponent {
-  constructor({element, phones, phonesCatalogue}) {
+  constructor({element}) {
     super(element);
-    
+
     this._element = element;
-    this._phones = phones;
-    this._phonesCatalogue = phonesCatalogue;
 
     this._element.addEventListener('change', this._onSorting.bind(this));
   }
