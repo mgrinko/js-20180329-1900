@@ -1,7 +1,7 @@
 "use strict"
 
 export default class MainComponent {
-    constructor({ element }) {
+    constructor({element}) {
         this._element = element;
     }
 
