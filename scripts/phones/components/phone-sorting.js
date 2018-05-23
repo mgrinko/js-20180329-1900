@@ -28,32 +28,29 @@ export default class PhoneSorting extends MainComponent {
         }
 
         if (type == 'text') {
-            this._sortText();
+            this._sortText(value);
 
         }
         if (type == 'date') {
-            this._sortDate();
+            this._sortDate(value);
 
         }
 
     }
 
     _sortNumber(value) {
-
         this._phones.sort((phone1, phone2) => {
-            console.log(phone1);
-            console.log(phone2);
-           return phone1.value - phone2.value;
+           return phone1[value] - phone2[value];
         });
     }
 
-    _sortText() {
+    _sortText(value) {
         this._phones.sort((phone1, phone2) => {
-            return phone1.value.toLowerCase() > phone2.value.toLowerCase();
+            return phone1[value].localeCompare(phone2[value]);
         });
     }
 
-    _sortDate() {
+    _sortDate(value) {
 
 
     }
