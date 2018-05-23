@@ -1,42 +1,89 @@
 'use strict';
+import MainComponent from "./main-component.js";
 
-export default class PhonesCatalogue {
-  constructor({ element, phones }) {
-    this._element = element;
-    this._phones = phones;
+export default class PhonesCatalogue extends MainComponent {
+    constructor({element, phones}) {
+        super(element)
 
-    this._onPhoneClick = this._onPhoneClick.bind(this);
+        this._phones = phones;
+        this._element = element;
 
-    this._render();
+        this._onPhoneClick = this._onPhoneClick.bind(this);
 
-    this._element.addEventListener('click', this._onPhoneClick);
-  }
+        this._render();
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
-  }
-
-  _onPhoneClick(event) {
-    let phoneElement = event.target.closest('[data-element="phone"]');
-
-    if (!phoneElement) {
-      return;
+        this._element.addEventListener('click', this._onPhoneClick);
     }
 
-    let customEvent = new CustomEvent('phoneSelected', {
-      detail: phoneElement.dataset.phoneId
-    });
 
-    this._element.dispatchEvent(customEvent);
-  }
+    _onPhoneClick(event) {
+        let phoneElement = event.target.closest('[data-element="phone"]');
 
-  _render() {
-    this._element.innerHTML = `
+        if (!phoneElement) {
+            return;
+        }
+
+        let customEvent = new CustomEvent('phoneSelected', {
+            detail: phoneElement.dataset.phoneId
+        });
+
+        this._element.dispatchEvent(customEvent);
+    }
+
+    _search(event) {
+        let query = event.detail;
+
+        [].forEach.call(this._element.querySelectorAll('.thumbnail'), function (element) {
+           element.classList.toggle("hidden",false);
+        });
+
+        this._phones.forEach((phone) => {
+            let element = this._element.querySelector(`[data-phone-id="${phone.id}"]`);
+            element.classList.toggle("hidden", !phone.id.includes(query));
+        });
+
+    }
+
+    _sorting(event) {
+        let type = event.detail.type;
+        let value = event.detail.value;
+
+        if (type == 'number') {
+            this._sortNumber(value);
+        }
+
+        if (type == 'text') {
+            this._sortText(value);
+        }
+
+        if (type == 'date') {
+            this._sortDate(value);
+        }
+
+    }
+
+    _sortNumber(value) {
+        this._phones.sort((phone1, phone2) => {
+            return phone1[value] - phone2[value];
+        });
+    }
+
+    _sortText(value) {
+        this._phones.sort((phone1, phone2) => {
+            return phone1[value].localeCompare(phone2[value]);
+        });
+    }
+
+    _sortDate(value) {
+    }
+
+    _render() {
+        this._element.innerHTML = `
       <ul class="phones">
       
         ${
-          this._phones
-            .map((phone) => `
+            this._phones
+                .map((phone) => `
               <li class="thumbnail"
                   data-element="phone"
                   data-phone-id="${ phone.id }">
@@ -54,10 +101,10 @@ export default class PhonesCatalogue {
                 <p>${ phone.snippet }</p>
               </li> 
             `)
-            .join('')
-        }
+                .join('')
+            }
              
       </ul>    
     `;
-  }
+    }
 }
