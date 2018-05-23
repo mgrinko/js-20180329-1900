@@ -1,7 +1,10 @@
 'use strict';
+import MainComponent from './main-component.js';
 
-export default class PhonesCatalogue {
+export default class PhonesCatalogue extends MainComponent{
   constructor({ element, phones }) {
+    super(element);
+
     this._element = element;
     this._phones = phones;
     this._onPhoneClick = this._onPhoneClick.bind(this);
@@ -11,10 +14,6 @@ export default class PhonesCatalogue {
       ._render();
 
     this._element.addEventListener('click', this._onPhoneClick);
-  }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
   }
 
   _onPhoneClick(event) {
