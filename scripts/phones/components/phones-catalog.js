@@ -1,5 +1,5 @@
 'use strict';
-import MainComponent from "./main-component";
+import MainComponent from "./main-component.js";
 
 export default class PhonesCatalogue extends MainComponent {
     constructor({element, phones}) {

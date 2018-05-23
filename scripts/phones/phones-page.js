@@ -3,7 +3,7 @@
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import PhoneSorting from './components/phone-sorting.js'
-import PhoneSearch from "./components/phone-search";
+import PhoneSearch from "./components/phone-search.js";
 
 export default class PhonesPage {
     constructor({element}) {
