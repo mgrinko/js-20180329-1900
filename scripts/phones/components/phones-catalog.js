@@ -4,6 +4,7 @@ export default class PhonesCatalogue {
   constructor({ element, phones }) {
     this._element = element;
     this._phones = phones;
+    this._sort = 'name';
 
     this._onPhoneClick = this._onPhoneClick.bind(this);
 
@@ -36,6 +37,9 @@ export default class PhonesCatalogue {
       
         ${
           this._phones
+            .sort((f1, f2)=>{
+                  return f1[this._sort] > f2[this._sort] ? 1 : -1;
+            })
             .map((phone) => `
               <li class="thumbnail"
                   data-element="phone"
@@ -59,5 +63,12 @@ export default class PhonesCatalogue {
              
       </ul>    
     `;
+  }
+
+  Sort(sortVal){
+    if (sortVal){
+        this._sort = sortVal.toLowerCase();
+    }
+    this._render();
   }
 }
