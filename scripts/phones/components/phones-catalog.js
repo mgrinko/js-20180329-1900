@@ -1,19 +1,15 @@
 'use strict';
 
-export default class PhonesCatalogue {
+import Component from "../../common/component.js";
+
+export default class PhonesCatalogue extends Component {
   constructor({ element, phones }) {
-    this._element = element;
+    super({element});
+
     this._phones = phones;
-
     this._onPhoneClick = this._onPhoneClick.bind(this);
-
     this._render();
-
     this._element.addEventListener('click', this._onPhoneClick);
-  }
-
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
   }
 
   _onPhoneClick(event) {
@@ -59,5 +55,10 @@ export default class PhonesCatalogue {
              
       </ul>    
     `;
+  }
+
+  renderPhones(phones) {
+    this._phones = phones;
+    this._render();
   }
 }
