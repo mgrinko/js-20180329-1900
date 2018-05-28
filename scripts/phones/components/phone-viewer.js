@@ -70,9 +70,9 @@ export default class PhoneViewer extends Component {
   
     
 
-    // function onAddImgClick(src, title) {
-    //   largeImg.src = src;
-    //   largeImg.alt = title;
-    // }
+    function onAddImgClick(src, title) {
+      largeImg.src = src;
+      largeImg.alt = title;
+    }
   }
 }
