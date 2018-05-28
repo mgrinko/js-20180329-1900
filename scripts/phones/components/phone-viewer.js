@@ -58,11 +58,11 @@ export default class PhoneViewer extends Component {
 
   _onAddImgClick() {
     let largeImg = event.target.closest('[data-element="thumbs-img"]');
-    while (largeImg != this) {
+   {
 
-      if (largeImg.nodeName == 'A') {
-        showThumbnail(largeImg.href, largeImg.title);
-        return false;
+      if (!largeImg) {
+       
+        return;
       }
   
       largeImg = largeImg.parentNode;
