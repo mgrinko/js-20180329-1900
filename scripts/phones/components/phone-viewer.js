@@ -9,6 +9,7 @@ export default class PhoneViewer extends Component {
     this._phone = null;
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
+    this._element.addEventListener('click', this._onAddImgClick.bind(this));
   }
 
   show(phone) {
@@ -35,7 +36,7 @@ export default class PhoneViewer extends Component {
       <h2>Phone details</h2>
 
       <div>
-        <img class="phone" src="${ phone.images[0] }">
+        <img class="phone" src="${ phone.images[0] }" data-element="largeImg">
 
         <button data-element="back-button">Back to list</button>
         <button>Add to basket</button>
@@ -44,14 +45,34 @@ export default class PhoneViewer extends Component {
     
         <p>${ phone.description }</p>
         
-        <ul class="phone-thumbs">
+        <ul class="phone-thumbs" id="thumbs" >
           ${phone.images.map((imageUrl) => `
-            <li>
-              <img src="${ imageUrl }">
+            <li data-element="thumbs-img">
+              <img src="${ imageUrl }>
             </li>
           `).join('')}
         </ul>
       </div>
     `;
+  }
+
+  _onAddImgClick() {
+    let largeImg = event.target.closest('[data-element="thumbs-img"]');
+    while (largeImg != this) {
+
+      if (largeImg.nodeName == 'A') {
+        showThumbnail(largeImg.href, largeImg.title);
+        return false;
+      }
+  
+      largeImg = largeImg.parentNode;
+    }
+  
+    
+
+    function onAddImgClick(src, title) {
+      largeImg.src = src;
+      largeImg.alt = title;
+    }
   }
 }
