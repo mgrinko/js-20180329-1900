@@ -65,14 +65,14 @@ export default class PhoneViewer extends Component {
         return;
       }
   
-      largeImg = largeImg.parentNode;
+      this._trigger('thumbs-img');
     }
   
     
 
-    function onAddImgClick(src, title) {
-      largeImg.src = src;
-      largeImg.alt = title;
-    }
+    // function onAddImgClick(src, title) {
+    //   largeImg.src = src;
+    //   largeImg.alt = title;
+    // }
   }
 }
