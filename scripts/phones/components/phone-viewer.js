@@ -9,7 +9,7 @@ export default class PhoneViewer extends Component {
     this._phone = null;
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
-    this._element.addEventListener('click', this._onAddImgClick.bind(this));
+    // this._element.addEventListener('click', this._onAddImgClick.bind(this));
   }
 
   show(phone) {
@@ -56,23 +56,24 @@ export default class PhoneViewer extends Component {
     `;
   }
 
-  _onAddImgClick() {
-    let largeImg = event.target.closest('[data-element="thumbs-img"]');
-   {
+//   _onAddImgClick() {
+//     let largeImg = event.target.closest('[data-element="thumbs-img"]');
+//    {
 
-      if (!largeImg) {
+//       if (!largeImg) {
        
-        return;
-      }
+//         return;
+//       }
   
-      this._trigger('thumbs-img');
-    }
+//       this._trigger('thumbs-img');
+//     }
   
     
 
-    function onAddImgClick(src, title) {
-      largeImg.src = src;
-      largeImg.alt = title;
-    }
-  }
+//     function onAddImgClick(src, title) {
+//       largeImg.src = src;
+//       largeImg.alt = title;
+//     }
+//   }
+// }
 }
