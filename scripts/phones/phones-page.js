@@ -1,7 +1,7 @@
 'use strict';
 
 import PhonesService from './services/phones-service.js';
-import Filter from './services/filter-service.js';
+import FilterService from './services/filter-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import PhonesSorting from './components/phones-sorting.js';
 import PhonesSearch from './components/phones-search.js';
@@ -31,7 +31,7 @@ export default class PhonesPage {
       });
 
       this._search.on('phoneSearch', (event) => {
-        let isEmpty = Filter({
+        let isEmpty = FilterService.filter({
             query: event.detail, 
             phones: phones, 
             element: this._element.querySelector('[data-component="phones-catalog"]')
