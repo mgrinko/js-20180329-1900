@@ -73,39 +73,6 @@ export default class PhonesCatalogue extends MainComponent {
 
     }
 
-    _sorting(event) {
-        let type = event.detail.type;
-        let value = event.detail.value;
-
-        if (type == 'number') {
-            this._sortNumber(value);
-        }
-
-        if (type == 'text') {
-            this._sortText(value);
-        }
-
-        if (type == 'date') {
-            this._sortDate(value);
-        }
-
-    }
-
-    _sortNumber(value) {
-        this._phones.sort((phone1, phone2) => {
-            return phone1[value] - phone2[value];
-        });
-    }
-
-    _sortText(value) {
-        this._phones.sort((phone1, phone2) => {
-            return phone1[value].localeCompare(phone2[value]);
-        });
-    }
-
-    _sortDate(value) {
-    }
-
     _render() {
         this._element.innerHTML = `
       <ul class="phones">

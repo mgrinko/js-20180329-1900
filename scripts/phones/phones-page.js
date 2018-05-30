@@ -38,7 +38,13 @@ export default class PhonesPage {
             element: this._element.querySelector('[data-component="sorting"]')
         });
         this._phoneSorting.on('phoneSorting', (event) => {
-            //  this._catalogue._sorting(event)
+            let query = {
+                detail: event.detail,
+                value: "sort"
+            }
+            PhonesService.loadPhones((phones) => {
+                this._catalogue.setPhones(phones);
+            }, query);
             this._catalogue.show();
         });
 

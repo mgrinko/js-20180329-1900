@@ -18,21 +18,19 @@ export default class Sorting extends MainComponent {
         this._element.innerHTML = `
             Sort by:
             <select>
-                 <option value="name">Alphabetical</option>
-                 <option value="age">Newest</option>
+                <option value="name" data-type="text">Alphabetical</option>
+                 <option value="age" data-type="number">Newest</option>
             </select>
     `;
     }
     _changeSelectedItem(event) {
         let selectedIndex = event.target.selectedIndex;
+        let select = this._element.querySelector("select");
 
-        let customEvent = new CustomEvent('phoneSorting', {
-            detail: {
-                value: this._element.value,
-                type: this._element.options[selectedIndex].dataset.type
-            }
+        this._trigger('phoneSorting',  {
+            value: select.value,
+            type: select.options[selectedIndex].dataset.type
         });
-        this._element.dispatchEvent(customEvent);
     }
 
 }
