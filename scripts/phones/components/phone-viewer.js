@@ -9,6 +9,7 @@ export default class PhoneViewer extends MainComponent {
         this._phone = null;
 
         this._element.addEventListener('click', this._onBackButtonClick.bind(this));
+        this._element.addEventListener('click', this._onAddButtonClick.bind(this));
     }
 
     show(phone) {
@@ -27,6 +28,15 @@ export default class PhoneViewer extends MainComponent {
 
         });
 
+    }
+    _onAddButtonClick() {
+        let addButton = event.target.closest('[data-element="add-button"]');
+
+        if (!addButton) {
+            return;
+        }
+
+        this._trigger('add', this._phone.id);
     }
 
     _onBackButtonClick() {
@@ -49,7 +59,7 @@ export default class PhoneViewer extends MainComponent {
         <img class="phone" id = "mainImg" src="${ this._phone.images[0] }">
 
         <button data-element="back-button">Back to list</button>
-        <button>Add to basket</button>
+        <button data-element="add-button">Add to basket</button>
     
         <h1>${ phone.name }</h1>
     

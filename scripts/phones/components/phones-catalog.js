@@ -61,7 +61,9 @@ export default class PhonesCatalogue extends MainComponent {
 
     _render() {
         this._element.innerHTML = `
-      <ul class="phones">
+        <h2>Catalogue</h2>
+
+        <ul class="phones">
       
         ${
             this._phones
@@ -71,13 +73,21 @@ export default class PhonesCatalogue extends MainComponent {
                   data-phone-id="${ phone.id }">
                   
                 <a href="#!/phones/${ phone.id }"
+                   data-element="details-trigger" 
                    class="thumb">
                   <img alt="${ phone.name }"
                        src="${ phone.imageUrl }">
                 </a>
                 
+                <div class="phones__btn-buy-wrapper">
+                  <a class="btn btn-success"
+                     data-element="add-button">
+                    Add
+                  </a>
+                </div>
+                
                 <a href="#!/phones/${ phone.id }"
-                  data-element="details-trigger">
+                   data-element="details-trigger">
                   ${ phone.name }
                 </a>
                 
@@ -87,7 +97,7 @@ export default class PhonesCatalogue extends MainComponent {
                 .join('')
             }
              
-      </ul>    
+        </ul>    
     `;
     }
 }
