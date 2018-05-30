@@ -75,9 +75,8 @@ export default class PhonesPage {
         });
 
         this._viewer.on('add', (event) => {
-            debugger;
             let phoneId = event.detail;
-
+            
             this._shoppingCart.addItem(phoneId);
         });
 
