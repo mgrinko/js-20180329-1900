@@ -1,33 +1,45 @@
 'use strict';
 
-export default class PhonesCatalogue {
-  constructor({ element, phones }) {
-    this._element = element;
-    this._phones = phones;
+import Component from '../../component.js';
 
-    this._onPhoneClick = this._onPhoneClick.bind(this);
+export default class PhonesCatalogue extends Component{
+  constructor({ element }) {
+    super({ element });
 
+    this._phones = [];
     this._render();
 
-    this._element.addEventListener('click', this._onPhoneClick);
+    this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
+    this._element.addEventListener('click', this._onAddButtonClick.bind(this));
   }
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
+  setPhones(phones) {
+    this._phones = phones;
+    this._render();
   }
 
-  _onPhoneClick(event) {
-    let phoneElement = event.target.closest('[data-element="phone"]');
+  _onDetailsTriggerClick(event) {
+    let trigger = event.target.closest('[data-element="details-trigger"]');
 
-    if (!phoneElement) {
+    if (!trigger) {
       return;
     }
 
-    let customEvent = new CustomEvent('phoneSelected', {
-      detail: phoneElement.dataset.phoneId
-    });
+    let phoneElement = event.target.closest('[data-element="phone"]');
 
-    this._element.dispatchEvent(customEvent);
+    this._trigger('phoneSelected', phoneElement.dataset.phoneId);
+  }
+
+  _onAddButtonClick(event) {
+    let addButton = event.target.closest('[data-element="add-button"]');
+
+    if (!addButton) {
+      return;
+    }
+
+    let phoneElement = event.target.closest('[data-element="phone"]');
+
+    this._trigger('add', phoneElement.dataset.phoneId);
   }
 
   _render() {
@@ -44,16 +56,21 @@ export default class PhonesCatalogue {
                   data-phone-id="${ phone.id }">
                   
                 <a href="#!/phones/${ phone.id }"
+                   data-element="details-trigger" 
                    class="thumb">
                   <img alt="${ phone.name }"
                        src="${ phone.imageUrl }">
                 </a>
                 
                 <div class="phones__btn-buy-wrapper">
-                  <a class="btn btn-success">Add</a>
+                  <a class="btn btn-success"
+                     data-element="add-button">
+                    Add
+                  </a>
                 </div>
                 
-                <a href="#!/phones/${ phone.id }">
+                <a href="#!/phones/${ phone.id }"
+                   data-element="details-trigger">
                   ${ phone.name }
                 </a>
                 
