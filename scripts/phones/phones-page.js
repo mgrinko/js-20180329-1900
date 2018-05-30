@@ -104,6 +104,12 @@ export default class PhonesPage {
       element: this._element.querySelector('[data-component="shopping-cart"]'),
     });
 
+    this._shoppingCart.on('remove', () => {
+      let itemId = event.detail;
+
+      this._shoppingCart.removeItem(itemId);
+    });
+
   }
 
   _renderCatalogue(phones) {

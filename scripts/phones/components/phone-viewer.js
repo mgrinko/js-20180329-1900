@@ -10,8 +10,7 @@ export default class PhoneViewer extends Component {
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
     this._element.addEventListener('click', this._onAddButtonClick.bind(this));
-    this._element.addEventListener('click', this._onSelectPictureClick.bind(this));    
-
+    this._element.addEventListener('click', this._onSelectPictureClick.bind(this));
   }
 
   show(phone) {

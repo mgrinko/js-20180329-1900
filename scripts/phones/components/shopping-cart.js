@@ -1,12 +1,28 @@
 'use strict';
 
-export default class ShoppingCart {
+import Component from '../../component.js';
+
+export default class ShoppingCart extends Component{
   constructor({ element }) {
+    super({ element });
+
     this._element = element;
 
     this._items = [];
 
     this._render();
+
+    this._element.addEventListener('click', this._onRemoveButtonClick.bind(this));
+  }
+
+  _onRemoveButtonClick(event) {
+    let removeButton = event.target.closest('[data-element="remove-button"]');
+
+    if (!removeButton) {
+      return;
+    }
+
+    this._trigger('remove', removeButton.dataset.itemId);
   }
 
   addItem(item) {
@@ -14,6 +30,12 @@ export default class ShoppingCart {
       ...this._items,
       item
     ];
+
+    this._render();
+  }
+
+  removeItem(item) {
+    this._items.splice(item, 1);
 
     this._render();
   }
@@ -35,7 +57,7 @@ export default class ShoppingCart {
 
     for (let item of this._items) {
       html += `
-        <li>${ item }</li>
+        <li>${ item } <button data-element="remove-button" data-item-id="${ this._items.indexOf(item) }">x</button></li>
       `;
     }
 
