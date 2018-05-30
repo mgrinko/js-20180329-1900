@@ -1,15 +1,28 @@
 'use strict';
 
-import MainComponent from "./main-component.js";
+import MainComponent from "../../main-component.js";
 
-export default class PhoneSorting extends MainComponent {
-    constructor({element, phones}) {
+export default class Sorting extends MainComponent {
+    constructor({element}) {
         super(element);
+
         this._element = element;
 
         this._element.addEventListener('change', this._changeSelectedItem.bind(this));
+
+
+        this._render();
     }
 
+    _render() {
+        this._element.innerHTML = `
+            Sort by:
+            <select>
+                 <option value="name">Alphabetical</option>
+                 <option value="age">Newest</option>
+            </select>
+    `;
+    }
     _changeSelectedItem(event) {
         let selectedIndex = event.target.selectedIndex;
 

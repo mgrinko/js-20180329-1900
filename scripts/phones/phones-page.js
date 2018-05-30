@@ -2,38 +2,68 @@
 
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
-import PhoneSorting from './components/phone-sorting.js'
-import PhoneSearch from "./components/phone-search.js";
+import Sorting from './components/sorting.js'
+import Search from "./components/search.js";
+import ShoppingCart from "./components/shopping-cart.js";
+import PhoneViewer from "./components/phone-viewer.js";
 
 export default class PhonesPage {
     constructor({element}) {
         this._element = element;
 
         this._catalogue = new PhonesCatalogue({
-            element: this._element.querySelector('[data-component="phones-catalog"]'),
-            phones: PhonesService.getPhones(),
+            element: this._element.querySelector('[data-component="phones-catalog"]')
         });
-        this._phoneSorting = new PhoneSorting({
-            element: this._element.querySelector('[data-component="phone-sorting"]'),
-            phones: PhonesService.getPhones(),
+        this._catalogue.on('add', (event) => {
+            let phoneId = event.detail;
+
+            this._shoppingCart.addItem(phoneId);
         });
-        this._phoneSearch = new PhoneSearch({
-            element: this._element.querySelector('[data-component="phone-search"]'),
+
+        PhonesService.loadPhones((phones) => {
+            this._catalogue.setPhones(phones);
         });
+
         // this._catalogue._element.addEventListener('phoneSelected', (event) => {
         this._catalogue.on('phoneSelected', (event) => {
             let phoneId = event.detail;
 
-            console.log(phoneId);
+            PhonesService.loadPhone(phoneId, (phone) => {
+                this._viewer.show(phone);
+                this._catalogue.hide();
+            });
         });
 
+        this._phoneSorting = new Sorting({
+            element: this._element.querySelector('[data-component="sorting"]')
+        });
         this._phoneSorting.on('phoneSorting', (event) => {
-            this._catalogue._sorting(event)
-            this._catalogue._render();
+            //  this._catalogue._sorting(event)
+            this._catalogue.show();
         });
 
+        this._phoneSearch = new Search({
+            element: this._element.querySelector('[data-component="search"]'),
+        });
         this._phoneSearch.on('phoneSearch', (event) => {
             this._catalogue._search(event);
         });
+
+        this._shoppingCart = new ShoppingCart({
+            element: this._element.querySelector('[data-component="shopping-cart"]'),
+        });
+
+        this._viewer = new PhoneViewer({
+            element: this._element.querySelector('[data-component="phone-viewer"]'),
+        });
+
+        this._viewer.on('back', () => {
+            this._viewer.hide();
+            this._catalogue.show();
+        });
+
+
+
+
     }
 }

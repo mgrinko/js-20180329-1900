@@ -1,11 +1,11 @@
 'use strict';
-import MainComponent from "./main-component.js";
+import MainComponent from "../../main-component.js";
 
 export default class PhonesCatalogue extends MainComponent {
-    constructor({element, phones}) {
+    constructor({element}) {
         super(element)
 
-        this._phones = phones;
+        this._phones = [];
         this._element = element;
 
         this._onPhoneClick = this._onPhoneClick.bind(this);
@@ -13,8 +13,37 @@ export default class PhonesCatalogue extends MainComponent {
         this._render();
 
         this._element.addEventListener('click', this._onPhoneClick);
+        this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
+        this._element.addEventListener('click', this._onAddButtonClick.bind(this));
     }
 
+    setPhones(phones) {
+        this._phones = phones;
+        this._render();
+    }
+    _onDetailsTriggerClick(event) {
+        let trigger = event.target.closest('[data-element="details-trigger"]');
+
+        if (!trigger) {
+            return;
+        }
+
+        let phoneElement = event.target.closest('[data-element="phone"]');
+
+        this._trigger('phoneSelected', phoneElement.dataset.phoneId);
+    }
+
+    _onAddButtonClick(event) {
+        let addButton = event.target.closest('[data-element="add-button"]');
+
+        if (!addButton) {
+            return;
+        }
+
+        let phoneElement = event.target.closest('[data-element="phone"]');
+
+        this._trigger('add', phoneElement.dataset.phoneId);
+    }
 
     _onPhoneClick(event) {
         let phoneElement = event.target.closest('[data-element="phone"]');
@@ -94,7 +123,8 @@ export default class PhonesCatalogue extends MainComponent {
                        src="${ phone.imageUrl }">
                 </a>
                 
-                <a href="#!/phones/${ phone.id }">
+                <a href="#!/phones/${ phone.id }"
+                  data-element="details-trigger">
                   ${ phone.name }
                 </a>
                 
