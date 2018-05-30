@@ -10,6 +10,7 @@ export default class PhoneViewer extends Component {
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
     this._element.addEventListener('click', this._onAddButtonClick.bind(this));
+    this._element.addEventListener('click', this._onSelectPictureClick.bind(this));    
 
   }
 
@@ -18,6 +19,10 @@ export default class PhoneViewer extends Component {
     this._render();
 
     super.show();
+  }
+
+  setPicture(url) {
+    this._element.querySelector('.phone').src = url;
   }
 
   _onBackButtonClick() {
@@ -42,6 +47,16 @@ export default class PhoneViewer extends Component {
     this._trigger('add', phoneElement.dataset.phoneId);
   }
 
+  _onSelectPictureClick() {
+    let selectPicture = event.target.closest('[data-element="select-picture"]');
+
+    if(!selectPicture) {
+      return;
+    }
+
+    this._trigger('selectPicture', selectPicture.src);
+  }
+
   _render() {
     let phone = this._phone;
 
@@ -63,7 +78,7 @@ export default class PhoneViewer extends Component {
         <ul class="phone-thumbs">
           ${phone.images.map((imageUrl) => `
             <li>
-              <img src="${ imageUrl }">
+              <img data-element="select-picture" src="${ imageUrl }">
             </li>
           `).join('')}
         </ul>

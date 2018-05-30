@@ -95,6 +95,10 @@ export default class PhonesPage {
       this._shoppingCart.addItem(phoneId);
     });
 
+    this._viewer.on('selectPicture', () => {
+      this._viewer.setPicture(event.detail);
+    });
+
 
     this._shoppingCart = new ShoppingCart({
       element: this._element.querySelector('[data-component="shopping-cart"]'),
