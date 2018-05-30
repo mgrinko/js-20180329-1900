@@ -52,7 +52,13 @@ export default class PhonesPage {
             element: this._element.querySelector('[data-component="search"]'),
         });
         this._phoneSearch.on('phoneSearch', (event) => {
-            this._catalogue._search(event);
+            let query = {
+                detail: event.detail,
+                value: "search"
+            }
+            PhonesService.loadPhones((phones) => {
+                this._catalogue.setPhones(phones);
+            }, query);
         });
 
         this._shoppingCart = new ShoppingCart({

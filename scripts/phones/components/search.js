@@ -1,6 +1,6 @@
 "use strict"
 
-import MainComponent  from '../../main-component.js';
+import MainComponent from '../../main-component.js';
 
 export default class Search extends MainComponent {
     constructor({element}) {
@@ -21,11 +21,10 @@ export default class Search extends MainComponent {
     }
 
     _onInput() {
-        let customEvent = new CustomEvent('phoneSearch', {
-            detail: this._element.value
+        let input = this._element.querySelector("input");
+        this._trigger('phoneSearch',  {
+            value: input.value
         });
-
-        this.element.dispatchEvent(customEvent);
     }
 
 }

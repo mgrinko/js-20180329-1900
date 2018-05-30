@@ -2,7 +2,7 @@
 
 const PhonesService = {
 
-    data: null,
+    phones: null,
 
     query: null,
 
@@ -23,11 +23,11 @@ const PhonesService = {
         xhr.send();
 
         xhr.onload = () => {
-            this.data = JSON.parse(xhr.responseText);
+            this.phones = JSON.parse(xhr.responseText);
             if(this.query !== undefined ) {
                 this.changeData();
             }
-            callback(this.data);
+            callback(this.phones);
         };
     },
 
@@ -59,18 +59,28 @@ const PhonesService = {
     },
 
     _sortNumber(value) {
-        this.data.sort((phone1, phone2) => {
+        this.phones.sort((phone1, phone2) => {
             return phone1[value] - phone2[value];
         });
     },
 
     _sortText(value) {
-        this.data.sort((phone1, phone2) => {
+        this.phones.sort((phone1, phone2) => {
             return phone1[value].localeCompare(phone2[value]);
         });
     },
 
     _sortDate(value) {
+    },
+
+    search() {
+        let findPhones = [];
+        this.phones.forEach((phone) => {
+            if(phone.id.toUpperCase().includes(this.query.detail.value.toUpperCase())) {
+                findPhones.push(phone);
+            }
+        });
+        this.phones = findPhones;
     }
 
 };
