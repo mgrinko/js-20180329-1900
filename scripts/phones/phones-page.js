@@ -89,6 +89,12 @@ export default class PhonesPage {
       this._catalogue.show();
     });
 
+    this._viewer.on('add', () => {
+      let phoneId = event.detail;
+
+      this._shoppingCart.addItem(phoneId);
+    });
+
 
     this._shoppingCart = new ShoppingCart({
       element: this._element.querySelector('[data-component="shopping-cart"]'),
