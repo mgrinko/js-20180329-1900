@@ -3,12 +3,17 @@
 import Component from '../../component.js';
 
 export default class PhoneViewer extends Component {
-  constructor({ element }) {
-    super({ element });
+  constructor({
+    element
+  }) {
+    super({
+      element
+    });
 
     this._phone = null;
 
     this._element.addEventListener('click', this._onBackButtonClick.bind(this));
+    this._element.addEventListener('click', this._onimgSmallClick.bind(this));
   }
 
   show(phone) {
@@ -28,6 +33,29 @@ export default class PhoneViewer extends Component {
     this._trigger('back');
   }
 
+  _onimgSmallClick(event) {
+    let imgSmall = event.target.closest('[data-element="phone-small"]');
+
+    if (!imgSmall) {
+      return;
+    }
+
+    this._trigger('imgSmall');
+
+    function imgsrc() {
+      let imgs = event.target.closest('[data-element="phone-imageUrll"]');
+      for (let imgs of imgsrc) {
+        let url = imgs.parentNode.url;
+        let img = event.target.closest.querySelector('img');
+
+      }
+      return imgs;
+    }
+  }
+
+
+
+
   _render() {
     let phone = this._phone;
 
@@ -45,11 +73,12 @@ export default class PhoneViewer extends Component {
         <p>${ phone.description }</p>
         
         <ul class="phone-thumbs">
-          ${phone.images.map((imageUrl) => `
-            <li>
-              <img src="${ imageUrl }">
-            </li>
-          `).join('')}
+          ${phone.images.map((imageUrl) => ` < li data - element = "phone-small" >
+      < img src = "${ imageUrl }"
+    data - element = "phone-imageUrl"
+    data - element = "phone-imageUrll" >
+      < /li>
+    `).join('')}
         </ul>
       </div>
     `;
