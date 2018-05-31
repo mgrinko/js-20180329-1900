@@ -2,11 +2,11 @@
 
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
+
 import PhoneViewer from './components/phone-viewer.js';
 import ShoppingCart from './components/shopping-cart.js';
 import Search from './components/search.js';
 import Sorter from './components/sorter.js';
-
 
 export default class PhonesPage {
   constructor({ element }) {
@@ -14,6 +14,14 @@ export default class PhonesPage {
 
     this._catalogue = new PhonesCatalogue({
       element: this._element.querySelector('[data-component="phones-catalog"]'),
+    });
+
+    this._sorter = new Sorter({
+      element: this._element.querySelector('[data-component="sorter"]')
+    });
+
+    this._search = new Search({
+      element: this._element.querySelector('[data-component="search"]')
     });
 
     PhonesService.loadPhones((phones) => {
@@ -36,6 +44,41 @@ export default class PhonesPage {
       this._shoppingCart.addItem(phoneId);
     });
 
+    this._sorter.on('sortSelected', (event) => {
+      let sortBy = event.detail;
+      PhonesService.loadPhones((phones) => {
+        phones.sort(function(a, b) {
+        if (a[sortBy] > b[sortBy]) {
+            return 1;
+          }
+          if (a[sortBy] < b[sortBy]) {
+            return -1;
+          }
+
+          return 0;
+        });
+
+        this._catalogue.setPhones(phones);
+      });
+    });
+
+    this._search.on('searchInput', (event) => {
+      let search = event.detail.toLowerCase();
+      let searchPhones = [];
+
+      PhonesService.loadPhones((phones) => {
+        for(let phone in phones) {  
+          let lowName = phones[phone].name.toLowerCase();
+
+          if(lowName.indexOf(search) !== -1) {
+            searchPhones.push(phones[phone]);
+          }
+        }
+
+        this._catalogue.setPhones(searchPhones);
+      });
+
+    });
 
     this._viewer = new PhoneViewer({
       element: this._element.querySelector('[data-component="phone-viewer"]'),
@@ -46,17 +89,33 @@ export default class PhonesPage {
       this._catalogue.show();
     });
 
+    this._viewer.on('add', () => {
+      let phoneId = event.detail;
+
+      this._shoppingCart.addItem(phoneId);
+    });
+
+    this._viewer.on('selectPicture', () => {
+      this._viewer.setPicture(event.detail);
+    });
+
 
     this._shoppingCart = new ShoppingCart({
       element: this._element.querySelector('[data-component="shopping-cart"]'),
     });
 
-    this._search = new Search({
-      element: this._element.querySelector('[data-component="search"]'),
+    this._shoppingCart.on('remove', () => {
+      let itemId = event.detail;
+
+      this._shoppingCart.removeItem(itemId);
     });
 
-    this._sorter = new Sorter({
-      element: this._element.querySelector('[data-component="sorter"]'),
+  }
+
+  _renderCatalogue(phones) {
+    this._catalogue = new PhonesCatalogue({
+      element: this._element.querySelector('[data-component="phones-catalog"]'),
+      phones: phones
     });
   }
 }
