@@ -3,7 +3,7 @@ var static = require('node-static');
 var file = new static.Server('.', {
   cache: 0,
   headers: {
-    // 'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': '*',
     // 'Access-Control-Allow-Methods': 'GET,PUT',
     // 'Access-Control-Allow-Headers': 'Content-Type'
   }
@@ -11,8 +11,6 @@ var file = new static.Server('.', {
 
 function accept(req, res) {
   if (req.url.startsWith('/api')) {
-    req.url += '.json';
-
     setTimeout(() => {
       file.serve(req, res);
     }, 1000);
