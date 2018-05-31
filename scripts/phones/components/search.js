@@ -1,8 +1,14 @@
-export default class Search {
+import Component from '../../component.js';
+
+export default class Search extends Component {
   constructor({ element }) {
-    this._element = element;
+    super({ element });
 
     this._render();
+
+    this.on('input', (event) => {
+      this._trigger('search', event.target.value);
+    });
   }
 
   _render() {
