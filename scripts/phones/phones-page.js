@@ -41,11 +41,12 @@ export default class PhonesPage {
 
       let phoneDetailsPromise = PhonesService.loadPhone(phoneId);
       let rightClickPromise = new Promise((resolve) => {
+        resolve();
         document.oncontextmenu = resolve;
       });
 
       let timeouPromise = new Promise((resolve) => {
-        setTimeout(resolve, 5000);
+        setTimeout(resolve, 100);
       });
 
       Promise.all([phoneDetailsPromise, rightClickPromise, timeouPromise])

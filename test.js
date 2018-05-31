@@ -34,6 +34,7 @@ async function test() {
 
 }
 
+let currentUser;
 
 loadAcademy('academy')
   .then((academy) => {
@@ -44,10 +45,12 @@ loadAcademy('academy')
       return;
     }
 
+    currentUser = user;
+
     return loadCourse(456);
   })
   .then((course) => {
-    return loadUserProgress(course.id, user.id);
+    return loadUserProgress(course.id, currentUser.id);
   })
   .then((progress) => {
 
