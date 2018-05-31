@@ -19,17 +19,37 @@ function loadUserProgress(userId, courseId, callback, errorCallback) {
 }
 
 
+async function test() {
 
-loadAcademy('academy', (academy) => {
-  loadUser((user) => {
+  try {
+    let academy = await loadAcademy('academy');
+    let user = await loadUser();
+    let course = await loadCourse(456);
+    let progress = await loadUserProgress(course.id, user.id);
+
+    console.log(progress);
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+
+loadAcademy('academy')
+  .then((academy) => {
+    return loadUser();
+  })
+  .then((user) => {
     if (!user.hasAccess) {
       return;
     }
 
-    loadCourse(456, (course) => {
-      loadUserProgress(course.id, user.id, () => {
-        // ...
-      })
-    })
+    return loadCourse(456);
   })
-});
+  .then((course) => {
+    return loadUserProgress(course.id, user.id);
+  })
+  .then((progress) => {
+
+  })
+  .catch()

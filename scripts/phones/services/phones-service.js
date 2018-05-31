@@ -2,7 +2,7 @@
 
 let BASE_API_URL = 'https://mgrinko.github.io/js-20180329-1900/api';
 
-class Promise {
+class MyPromise {
   constructor(behaviourFunction) {
     behaviourFunction(this._resolve.bind(this), this._reject.bind(this));
 
@@ -53,30 +53,26 @@ class Promise {
 }
 
 const PhonesService = {
-  loadPhones(filter, callback) {
+  loadPhones(filter) {
     let promise = this._sendRequest('/phones');
 
-    promise.then((phones) => {
-      const filteredPhones = this._filter(phones, filter.query);
-      const sortedPhones = this._sort(filteredPhones, filter.order);
+    let promise2 = promise
+      .then((phones) => {
+        const filteredPhones = this._filter(phones, filter.query);
+        const sortedPhones = this._sort(filteredPhones, filter.order);
 
-      callback(sortedPhones);
-    });
+        return sortedPhones;
+      });
 
-    setTimeout(() => {
-      promise.then((phones) => console.log(phones));
-    }, 2000);
+    return promise2;
   },
 
-  loadPhone(phoneId, callback) {
-    // this._sendRequest(`/phones/${ phoneId }`, callback);
-    const promise = this._sendRequest(`/phones/${ phoneId }`);
-
-    promise.then(callback);
+  loadPhone(phoneId) {
+    return this._sendRequest(`/phones/${ phoneId }`);
   },
 
   _sendRequest(url) {
-    let promise = new Promise(
+    return new Promise(
       (resolve, reject) => {
         let xhr = new XMLHttpRequest();
         let fullUrl = BASE_API_URL + url + '.json';
@@ -96,9 +92,6 @@ const PhonesService = {
         };
       }
     );
-
-
-    return promise;
   },
 
   _filter(phones, query) {

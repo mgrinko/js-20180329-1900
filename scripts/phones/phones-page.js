@@ -25,12 +25,10 @@ export default class PhonesPage {
     this._refreshPhones();
   }
 
-  _refreshPhones() {
-    const callback = (phones) => {
-      this._catalog.setPhones(phones);
-    };
+  async _refreshPhones() {
+    let phones = await PhonesService.loadPhones(this._filter);
 
-    PhonesService.loadPhones(this._filter, callback);
+    this._catalog.setPhones(phones);
   }
 
   _initCatalog() {
@@ -38,13 +36,21 @@ export default class PhonesPage {
       element: this._element.querySelector('[data-component="phones-catalog"]'),
     });
 
-    this._catalog.on('phoneSelected', (event) => {
+    this._catalog.on('phoneSelected', async (event) => {
       let phoneId = event.detail;
 
-      PhonesService.loadPhone(phoneId, (phone) => {
-        this._viewer.show(phone);
-        this._catalog.hide();
-      });
+      Promise.all([
+        PhonesService.loadPhone(phoneId),
+        PhonesService.loadPhones(this._filter),
+      ])
+        .then(([phone, data]) => {
+          this._viewer.show(phone);
+          this._catalog.hide();
+
+          console.log(data);
+        })
+        .catch(alert);
+
     });
 
     this._catalog.on('add', (event) => {
