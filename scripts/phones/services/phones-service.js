@@ -2,7 +2,7 @@
 
 const PhonesService = {
   loadPhones(filter, callback) {
-    this._sendRequest('/api/phones', (phones) => {
+    this._sendRequest('http://localhost:3000/api/phones', (phones) => {
       const filteredPhones = this._filter(phones, filter.query);
       const sortedPhones = this._sort(filteredPhones, filter.order);
 
