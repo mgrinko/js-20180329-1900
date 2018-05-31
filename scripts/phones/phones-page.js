@@ -39,17 +39,20 @@ export default class PhonesPage {
     this._catalog.on('phoneSelected', async (event) => {
       let phoneId = event.detail;
 
-      Promise.all([
-        PhonesService.loadPhone(phoneId),
-        PhonesService.loadPhones(this._filter),
-      ])
-        .then(([phone, data]) => {
+      let phoneDetailsPromise = PhonesService.loadPhone(phoneId);
+      let rightClickPromise = new Promise((resolve) => {
+        document.oncontextmenu = resolve;
+      });
+
+      let timeouPromise = new Promise((resolve) => {
+        setTimeout(resolve, 5000);
+      });
+
+      Promise.all([phoneDetailsPromise, rightClickPromise, timeouPromise])
+        .then(([phone]) => {
           this._viewer.show(phone);
           this._catalog.hide();
-
-          console.log(data);
-        })
-        .catch(alert);
+        });
 
     });
 
