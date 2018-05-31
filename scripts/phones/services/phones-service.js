@@ -2,6 +2,56 @@
 
 let BASE_API_URL = 'https://mgrinko.github.io/js-20180329-1900/api';
 
+class Promise {
+  constructor(behaviourFunction) {
+    behaviourFunction(this._resolve.bind(this), this._reject.bind(this));
+
+    this._status ='pending';
+    this._result = null;
+
+    this._successCallbacks = [];
+    this._errorCallbacks = [];
+  }
+
+  then(callback) {
+    if (this._status === 'fulfilled') {
+      callback(this._result);
+    } else {
+      this._successCallbacks.push(callback);
+    }
+  }
+
+  catch(errorCallback) {
+    this._errorCallbacks.push(errorCallback);
+  }
+
+  _resolve(data) {
+    if (this._status !== 'pending') {
+      return;
+    }
+
+    this._status = 'fulfilled';
+    this._result = data;
+
+    this._successCallbacks.forEach((callback) => {
+      callback(data);
+    });
+  }
+
+  _reject(error) {
+    if (this._status !== 'pending') {
+      return;
+    }
+
+    this._status = 'rejected';
+    this._result = error;
+
+    this._errorCallbacks.forEach((callback) => {
+      callback(error);
+    });
+  }
+}
+
 const PhonesService = {
   loadPhones(filter, callback) {
     let promise = this._sendRequest('/phones');
@@ -26,61 +76,26 @@ const PhonesService = {
   },
 
   _sendRequest(url) {
-    let promise = {
-      _status: 'pending',
-      _result: null,
+    let promise = new Promise(
+      (resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        let fullUrl = BASE_API_URL + url + '.json';
 
-      _successCallbacks: [],
-      _errorCallbacks: [],
+        xhr.open('GET', fullUrl, true);
 
-      then(callback) {
-        if (this._status === 'fulfilled') {
-          callback(this._result);
-        } else {
-          this._successCallbacks.push(callback);
-        }
-      },
+        xhr.send();
 
-      catch(errorCallback) {
-        this._errorCallbacks.push(errorCallback);
-      },
+        xhr.onload = () => {
+          let data = JSON.parse(xhr.responseText);
 
-      resolve(data) {
-        this._status = 'fulfilled';
-        this._result = data;
+          resolve(data);
+        };
 
-        this._successCallbacks.forEach((callback) => {
-          callback(data);
-        });
-      },
-
-      reject(error) {
-        this._status = 'rejected';
-        this._result = error;
-
-        this._errorCallbacks.forEach((callback) => {
-          callback(error);
-        });
-      },
-    };
-
-
-    let xhr = new XMLHttpRequest();
-    let fullUrl = BASE_API_URL + url + '.json';
-
-    xhr.open('GET', fullUrl, true);
-
-    xhr.send();
-
-    xhr.onload = () => {
-      let data = JSON.parse(xhr.responseText);
-
-      promise.resolve(data);
-    };
-
-    xhr.onerror = () => {
-      promise.reject(xhr.status + xhr.statusText);
-    };
+        xhr.onerror = () => {
+          reject(xhr.status + xhr.statusText);
+        };
+      }
+    );
 
 
     return promise;
