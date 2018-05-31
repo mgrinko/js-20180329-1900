@@ -12,51 +12,82 @@ export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
 
-    this._catalogue = new PhonesCatalogue({
+    this._filter = {
+      query: '',
+      order: 'name',
+    };
+
+    this._initCatalog();
+    this._initViewer();
+    this._initShoppingCart();
+    this._initFilter();
+
+    this._refreshPhones();
+  }
+
+  _refreshPhones() {
+    const callback = (phones) => {
+      this._catalog.setPhones(phones);
+    };
+
+    PhonesService.loadPhones(this._filter, callback);
+  }
+
+  _initCatalog() {
+    this._catalog = new PhonesCatalogue({
       element: this._element.querySelector('[data-component="phones-catalog"]'),
     });
 
-    PhonesService.loadPhones((phones) => {
-      this._catalogue.setPhones(phones);
-    });
-
-    // this._catalogue._element.addEventListener('phoneSelected', (event) => {
-    this._catalogue.on('phoneSelected', (event) => {
+    this._catalog.on('phoneSelected', (event) => {
       let phoneId = event.detail;
 
       PhonesService.loadPhone(phoneId, (phone) => {
         this._viewer.show(phone);
-        this._catalogue.hide();
+        this._catalog.hide();
       });
     });
 
-    this._catalogue.on('add', (event) => {
+    this._catalog.on('add', (event) => {
       let phoneId = event.detail;
 
       this._shoppingCart.addItem(phoneId);
     });
+  }
 
-
+  _initViewer() {
     this._viewer = new PhoneViewer({
       element: this._element.querySelector('[data-component="phone-viewer"]'),
     });
 
     this._viewer.on('back', () => {
       this._viewer.hide();
-      this._catalogue.show();
+      this._catalog.show();
     });
+  }
 
-
+  _initShoppingCart() {
     this._shoppingCart = new ShoppingCart({
       element: this._element.querySelector('[data-component="shopping-cart"]'),
     });
+  }
 
+  _initFilter() {
     this._search = new Search({
       element: this._element.querySelector('[data-component="search"]'),
     });
 
     this._sorter = new Sorter({
       element: this._element.querySelector('[data-component="sorter"]'),
+    });
+
+    this._search.on('search', (event) => {
+      this._filter.query = event.detail;
+      this._refreshPhones()
+    });
+
+    this._sorter.on('changeOrder', (event) => {
+      this._filter.order = event.detail;
+      this._refreshPhones()
     });
   }
 }
