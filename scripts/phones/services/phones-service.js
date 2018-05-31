@@ -4,7 +4,9 @@ let BASE_API_URL = 'https://mgrinko.github.io/js-20180329-1900/api';
 
 const PhonesService = {
   loadPhones(filter, callback) {
-    this._sendRequest('/phones', (phones) => {
+    let promise = this._sendRequest('/phones');
+
+    promise.then((phones) => {
       const filteredPhones = this._filter(phones, filter.query);
       const sortedPhones = this._sort(filteredPhones, filter.order);
 
@@ -13,7 +15,43 @@ const PhonesService = {
   },
 
   loadPhone(phoneId, callback) {
-    this._sendRequest(`/phones/${ phoneId }`, callback);
+    // this._sendRequest(`/phones/${ phoneId }`, callback);
+    const promise = this._sendRequest(`/phones/${ phoneId }`);
+
+    promise.then(callback);
+  },
+
+  _sendRequest(url) {
+    let promise = {
+      _successCallbacks: [],
+
+      then(callback) {
+        this._successCallbacks.push(callback);
+      },
+
+      resolve(data) {
+        this._successCallbacks.forEach((callback) => {
+          callback(data);
+        });
+      }
+    };
+
+
+    let xhr = new XMLHttpRequest();
+    let fullUrl = BASE_API_URL + url + '.json';
+
+    xhr.open('GET', fullUrl, true);
+
+    xhr.send();
+
+    xhr.onload = () => {
+      let data = JSON.parse(xhr.responseText);
+
+      promise.resolve(data);
+    };
+
+
+    return promise;
   },
 
   _filter(phones, query) {
@@ -34,21 +72,6 @@ const PhonesService = {
         ? 1
         : -1;
     });
-  },
-
-  _sendRequest(url, callback, { method = 'GET' } = {}) {
-    let xhr = new XMLHttpRequest();
-    let fullUrl = BASE_API_URL + url + '.json';
-
-    xhr.open(method, fullUrl, true);
-
-    xhr.send();
-
-    xhr.onload = () => {
-      let data = JSON.parse(xhr.responseText);
-
-      callback(data);
-    };
   }
 };
 
