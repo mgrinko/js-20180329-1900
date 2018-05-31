@@ -11,6 +11,7 @@ export default class PhonesCatalogue extends Component{
 
     this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
     this._element.addEventListener('click', this._onAddButtonClick.bind(this));
+  
   }
 
   setPhones(phones) {
