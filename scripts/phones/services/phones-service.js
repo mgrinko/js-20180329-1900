@@ -12,6 +12,10 @@ const PhonesService = {
 
       callback(sortedPhones);
     });
+
+    setTimeout(() => {
+      promise.then((phones) => console.log(phones));
+    }, 2000);
   },
 
   loadPhone(phoneId, callback) {
@@ -23,17 +27,41 @@ const PhonesService = {
 
   _sendRequest(url) {
     let promise = {
+      _status: 'pending',
+      _result: null,
+
       _successCallbacks: [],
+      _errorCallbacks: [],
 
       then(callback) {
-        this._successCallbacks.push(callback);
+        if (this._status === 'fulfilled') {
+          callback(this._result);
+        } else {
+          this._successCallbacks.push(callback);
+        }
+      },
+
+      catch(errorCallback) {
+        this._errorCallbacks.push(errorCallback);
       },
 
       resolve(data) {
+        this._status = 'fulfilled';
+        this._result = data;
+
         this._successCallbacks.forEach((callback) => {
           callback(data);
         });
-      }
+      },
+
+      reject(error) {
+        this._status = 'rejected';
+        this._result = error;
+
+        this._errorCallbacks.forEach((callback) => {
+          callback(error);
+        });
+      },
     };
 
 
@@ -48,6 +76,10 @@ const PhonesService = {
       let data = JSON.parse(xhr.responseText);
 
       promise.resolve(data);
+    };
+
+    xhr.onerror = () => {
+      promise.reject(xhr.status + xhr.statusText);
     };
 
 
