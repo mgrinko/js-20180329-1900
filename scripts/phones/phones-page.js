@@ -8,11 +8,13 @@ import ShoppingCart from "./components/ShoppingCart.js";
 export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
-
-
     this._catalogue = new PhonesCatalogue({
-      element: this._element.querySelector('[data-component="phones-catalog"]'),
-      phones: PhonesService.getPhones(),
+          element: this._element.querySelector('[data-component="phones-catalog"]')
+    });
+
+    PhonesService.getPhones().then((phones)=>{
+      this._phones = phones;
+      this._catalogue.SetPhones(phones)
     });
 
     this._phoneViewer = new PhoneViewer(
@@ -25,20 +27,21 @@ export default class PhonesPage {
 
     this._sortSelect = this._element.querySelector('[data-component="phones-sort"]');
     this._sortSelect.addEventListener('change', (function(){
-        let sortVal = this._sortSelect.value;
-        this._catalogue.Sort(sortVal);
+        let sortBy = this._sortSelect.value;
+        this._catalogue.SetPhones(PhonesService.sortPhones(this._phones, sortBy));
     }).bind(this));
 
     this._filter = this._element.querySelector('[data-component="phones-filter"');
     this._filter.addEventListener('input', (event)=>{
-        this._catalogue.Filtr(event.target.value);
+        this._catalogue.SetPhones(PhonesService.filterPhones(this._phones, event.target.value));
     });
 
     this._catalogue.on('phoneSelected', (event) => {
       let phoneId = event.detail;
-      let phone = PhonesService.getPhoneById(phoneId);
-      this._catalogue.Hide();
-      this._phoneViewer.Show(phone);
+      PhonesService.getPhoneById(phoneId).then((phone)=>{
+          this._catalogue.Hide();
+          this._phoneViewer.Show(phone);
+      });
     });
 
     this._phoneViewer.on('onBackButtonClicked', ()=>{
