@@ -160,6 +160,10 @@ const phonesFromServer = [
 const PhonesService = {
   getPhones() {
     return phonesFromServer;
+  },
+
+  getPhoneById(id){
+      return phonesFromServer.find((phone)=>{ return phone.id === id });
   }
 };
 

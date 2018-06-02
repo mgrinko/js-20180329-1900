@@ -1,10 +1,13 @@
 'use strict';
 
-export default class PhonesCatalogue {
+import BaseComponent from "./BaseComponent.js";
+
+export default class PhonesCatalogue extends BaseComponent{
   constructor({ element, phones }) {
-    this._element = element;
+    super(element);
     this._phones = phones;
     this._sort = 'name';
+    this._filtr = null;
 
     this._onPhoneClick = this._onPhoneClick.bind(this);
 
@@ -13,9 +16,9 @@ export default class PhonesCatalogue {
     this._element.addEventListener('click', this._onPhoneClick);
   }
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
-  }
+
+
+
 
   _onPhoneClick(event) {
     let phoneElement = event.target.closest('[data-element="phone"]');
@@ -27,8 +30,7 @@ export default class PhonesCatalogue {
     let customEvent = new CustomEvent('phoneSelected', {
       detail: phoneElement.dataset.phoneId
     });
-
-    this._element.dispatchEvent(customEvent);
+    this.Trigger(customEvent);
   }
 
   _render() {
@@ -40,6 +42,9 @@ export default class PhonesCatalogue {
             .sort((f1, f2)=>{
                   return f1[this._sort] > f2[this._sort] ? 1 : -1;
             })
+              .filter((phone)=>{
+                return !this._filtr || phone.name.toLowerCase().indexOf(this._filtr) > -1;
+              })                         
             .map((phone) => `
               <li class="thumbnail"
                   data-element="phone"
@@ -69,6 +74,11 @@ export default class PhonesCatalogue {
     if (sortVal){
         this._sort = sortVal.toLowerCase();
     }
+    this._render();
+  }
+
+  Filtr(filtr){
+    this._filtr = filtr.toLowerCase();
     this._render();
   }
 }

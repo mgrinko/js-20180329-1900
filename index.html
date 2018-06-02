@@ -24,7 +24,7 @@
         <section>
           <p>
             Search:
-            <input>
+            <input data-component="phones-filter">
           </p>
 
           <p>
@@ -36,20 +36,13 @@
           </p>
         </section>
 
-        <section>
-          <p>Shopping Cart</p>
-          <ul>
-            <li>Phone 1</li>
-            <li>Phone 2</li>
-            <li>Phone 3</li>
-          </ul>
-        </section>
+        <section data-component="phones-shoppingCart"></section>
       </div>
 
       <div class="col-md-10">
         <!--Body content-->
         <div data-component="phones-catalog"></div>
-
+        <div data-component="phone-viewer"></div>
       </div>
 
     </div>
