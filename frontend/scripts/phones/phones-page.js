@@ -1,7 +1,7 @@
 'use strict';
 
 import PhonesService from './services/phones-service.js';
-import PhonesCatalogue from './components/phones-catalog.js';
+import PhonesCatalogue from './components/phones-catalog/phones-catalog.js';
 import PhoneViewer from './components/phone-viewer.js';
 import ShoppingCart from './components/shopping-cart.js';
 import Search from './components/search/search.js';

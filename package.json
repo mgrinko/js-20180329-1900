@@ -29,6 +29,8 @@
     "webpack-cli": "^3.0.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.49"
+    "@babel/runtime": "^7.0.0-beta.49",
+    "handlebars": "^4.0.11",
+    "handlebars-loader": "^1.7.0"
   }
 }
