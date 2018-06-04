@@ -1,4 +1,5 @@
-import Component from '../../component.js';
+import Component from '../../../component.js';
+import template from 'raw-loader!./search.html';
 
 export default class Search extends Component {
   constructor({ element }) {
@@ -12,9 +13,6 @@ export default class Search extends Component {
   }
 
   _render() {
-    this._element.innerHTML = `
-      Search:
-      <input>
-    `;
+    this._element.innerHTML = template;
   }
 }

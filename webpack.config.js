@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   mode: 'none',
-  entry: './scripts/app.js',
+  entry: './frontend/scripts/app.js',
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: 'build.js'

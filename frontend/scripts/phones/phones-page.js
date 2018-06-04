@@ -4,7 +4,7 @@ import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import PhoneViewer from './components/phone-viewer.js';
 import ShoppingCart from './components/shopping-cart.js';
-import Search from './components/search.js';
+import Search from './components/search/search.js';
 import Sorter from './components/sorter.js';
 
 
