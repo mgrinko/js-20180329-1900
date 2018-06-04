@@ -1,6 +1,8 @@
 import Component from '../../../component.js';
 import template from 'raw-loader!./search.html';
 
+import './search.css';
+
 export default class Search extends Component {
   constructor({ element }) {
     super({ element });

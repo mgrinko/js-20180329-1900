@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     filename: 'build.js'
   },
+  watch: true,
   devtool: 'source-map',
 
   module: {
@@ -27,6 +28,11 @@ module.exports = {
       {
         test: /\.hbs/,
         loader: "handlebars-loader"
+      },
+
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
       }
     ]
   },
