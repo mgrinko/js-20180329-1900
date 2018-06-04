@@ -41,7 +41,13 @@ module.exports = {
     new UglifyJsPlugin({
       sourceMap: true,
     })
-  ]
+  ],
+
+  devServer: {
+    contentBase: path.join(__dirname, "public"),
+    compress: true,
+    port: 9000
+  }
 };
 
 
