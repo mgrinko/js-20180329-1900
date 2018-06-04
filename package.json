@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/mgrinko/js-20180329-1900#readme",
   "devDependencies": {
-    "node-static": "^0.7.10"
+    "node-static": "^0.7.10",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^3.0.1"
   }
 }
