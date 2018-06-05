@@ -5,8 +5,21 @@ export default class Component {
     this._element = element;
   }
 
-  on(eventName, callback) {
-    this._element.addEventListener(eventName, callback);
+  on(eventName, callback, selector = '') {
+    this._element.addEventListener(eventName, (event) => {
+      if (!selector) {
+        callback(event);
+        return;
+      }
+
+      let element = event.target.closest(selector);
+
+      if (!element || !this._element.contains(element)) {
+        return;
+      }
+
+      callback(event);
+    });
   }
 
   hide() {

@@ -2,6 +2,7 @@
 
 import Component from '../../component.js';
 
+
 export default class PhonesCatalogue extends Component{
   constructor({ element }) {
     super({ element });
@@ -9,8 +10,8 @@ export default class PhonesCatalogue extends Component{
     this._phones = [];
     this._render();
 
-    this._element.addEventListener('click', this._onDetailsTriggerClick.bind(this));
-    this._element.addEventListener('click', this._onAddButtonClick.bind(this));
+    this.on('click', this._onDetailsTriggerClick.bind(this), '[data-element="details-trigger"]');
+    this.on('click', this._onAddButtonClick.bind(this), '[data-element="add-button"]');
   }
 
   setPhones(phones) {
@@ -19,24 +20,12 @@ export default class PhonesCatalogue extends Component{
   }
 
   _onDetailsTriggerClick(event) {
-    let trigger = event.target.closest('[data-element="details-trigger"]');
-
-    if (!trigger) {
-      return;
-    }
-
     let phoneElement = event.target.closest('[data-element="phone"]');
 
     this._trigger('phoneSelected', phoneElement.dataset.phoneId);
   }
 
   _onAddButtonClick(event) {
-    let addButton = event.target.closest('[data-element="add-button"]');
-
-    if (!addButton) {
-      return;
-    }
-
     let phoneElement = event.target.closest('[data-element="phone"]');
 
     this._trigger('add', phoneElement.dataset.phoneId);

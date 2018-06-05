@@ -1,19 +1,24 @@
 'use strict';
 
-let BASE_API_URL = 'https://mgrinko.github.io/js-20180329-1900/api';
+import HttpService from './http-service.js';
 
 const PhonesService = {
-  loadPhones(filter, callback) {
-    this._sendRequest('/phones', (phones) => {
-      const filteredPhones = this._filter(phones, filter.query);
-      const sortedPhones = this._sort(filteredPhones, filter.order);
+  loadPhones(filter) {
+    let promise = HttpService.send('/phones');
 
-      callback(sortedPhones);
-    });
+    let promise2 = promise
+      .then((phones) => {
+        const filteredPhones = this._filter(phones, filter.query);
+        const sortedPhones = this._sort(filteredPhones, filter.order);
+
+        return sortedPhones;
+      });
+
+    return promise2;
   },
 
-  loadPhone(phoneId, callback) {
-    this._sendRequest(`/phones/${ phoneId }`, callback);
+  loadPhone(phoneId) {
+    return HttpService.send(`/phones/${ phoneId }`);
   },
 
   _filter(phones, query) {
@@ -34,21 +39,6 @@ const PhonesService = {
         ? 1
         : -1;
     });
-  },
-
-  _sendRequest(url, callback, { method = 'GET' } = {}) {
-    let xhr = new XMLHttpRequest();
-    let fullUrl = BASE_API_URL + url + '.json';
-
-    xhr.open(method, fullUrl, true);
-
-    xhr.send();
-
-    xhr.onload = () => {
-      let data = JSON.parse(xhr.responseText);
-
-      callback(data);
-    };
   }
 };
 
