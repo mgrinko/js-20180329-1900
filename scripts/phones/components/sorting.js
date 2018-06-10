@@ -28,7 +28,7 @@ export default class Sorting extends MainComponent {
         let select = this._element.querySelector("select");
 
         this._trigger('phoneSorting',  {
-            value: select.value,
+            order: select.value,
             type: select.options[selectedIndex].dataset.type
         });
     }

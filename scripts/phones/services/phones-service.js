@@ -2,14 +2,15 @@
 
 const PhonesService = {
 
-    phones: null,
+    loadPhones(filter, callback) {
+        this._sendRequest('/api/phones', (phones) => {
+            const filteredPhones = this._search(phones,filter.query);
+            const sortedPhones = this._sorting(filteredPhones, filter.sort);
 
-    query: null,
-
-    loadPhones(callback, query) {
-        this.query = query;
-        this._sendRequest('/api/phones', callback);
+            callback(sortedPhones);
+        });
     },
+
 
     loadPhone(phoneId, callback) {
         this._sendRequest(`/api/phones/${ phoneId }`, callback);
@@ -23,49 +24,41 @@ const PhonesService = {
         xhr.send();
 
         xhr.onload = () => {
-            this.phones = JSON.parse(xhr.responseText);
-            if(this.query !== undefined ) {
-                this.changeData();
-            }
-            callback(this.phones);
+            let data = JSON.parse(xhr.responseText);
+            callback(data);
         };
     },
 
-    changeData() {
-        if(this.query.value === "sort") {
-            this.sorting(this.query)
-        }
+    _sorting(phones, sort) {
 
-        if(this.query.value === "search") {
-            this.search(this.query)
+        if (!sort) {
+            return phones;
         }
-
-    },
-    sorting() {
-        let type = this.query.detail.type;
-        let value = this.query.detail.value;
+        let type = sort.type;
+        let value = sort.order;
 
         if (type == 'number') {
-            this._sortNumber(value);
+           return this._sortNumber(phones,value);
         }
 
         if (type == 'text') {
-            this._sortText(value);
+          return  this._sortText(phones,value);
         }
 
         if (type == 'date') {
-            this._sortDate(value);
+          return this._sortDate(phones,value);
         }
+
     },
 
-    _sortNumber(value) {
-        this.phones.sort((phone1, phone2) => {
+    _sortNumber(phones,value) {
+      return phones.sort((phone1, phone2) => {
             return phone1[value] - phone2[value];
         });
     },
 
-    _sortText(value) {
-        this.phones.sort((phone1, phone2) => {
+    _sortText(phones,value) {
+       return phones.sort((phone1, phone2) => {
             return phone1[value].localeCompare(phone2[value]);
         });
     },
@@ -73,14 +66,16 @@ const PhonesService = {
     _sortDate(value) {
     },
 
-    search() {
-        let findPhones = [];
-        this.phones.forEach((phone) => {
-            if(phone.id.toUpperCase().includes(this.query.detail.value.toUpperCase())) {
-                findPhones.push(phone);
-            }
+    _search(phones,query) {
+        if (!query) {
+            return phones;
+        }
+
+        let normalizedQuery = query.toLowerCase();
+
+        return phones.filter((phone) => {
+            return phone.name.toLowerCase().includes(normalizedQuery);
         });
-        this.phones = findPhones;
     }
 
 };
