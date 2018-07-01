@@ -2,8 +2,12 @@
 
 body {
   padding-top: 20px;
+  background-color: yellowgreen;
 }
 
+.js-hidden {
+  display: none;
+}
 
 .phone-images {
   background-color: white;
@@ -30,6 +34,7 @@ body {
   clear: both;
   height: 115px;
   padding-top: 15px;
+  padding-right: 20px;
 }
 
 /** Detail View **/
@@ -97,3 +102,11 @@ ul.specs dt {
 h1 {
   border-bottom: 1px solid gray;
 }
+
+.phones__btn-buy-wrapper {
+  height: 100%;
+  display: flex;
+  float: right;
+  align-items:center;
+}
+
