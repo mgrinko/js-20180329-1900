@@ -1,75 +1,99 @@
 'use strict';
 
+class MyPromise {
+    constructor(behaviourFunction) {
+        behaviourFunction(this._resolve.bind(this), this._reject.bind(this));
+
+        this._status ='pending';
+        this._result = null;
+
+        this._successCallbacks = [];
+        this._errorCallbacks = [];
+    }
+
+    then(callback) {
+        if (this._status === 'fulfilled') {
+            callback(this._result);
+        } else {
+            this._successCallbacks.push(callback);
+        }
+    }
+
+    catch(errorCallback) {
+        this._errorCallbacks.push(errorCallback);
+    }
+
+    _resolve(data) {
+        debugger;
+        if (this._status !== 'pending') {
+            return;
+        }
+
+        this._status = 'fulfilled';
+        this._result = data;
+
+        this._successCallbacks.forEach((callback) => {
+            callback(data);
+        });
+    }
+
+    _reject(error) {
+        if (this._status !== 'pending') {
+            return;
+        }
+
+        this._status = 'rejected';
+        this._result = error;
+
+        this._errorCallbacks.forEach((callback) => {
+            callback(error);
+        });
+    }
+}
+
 const PhonesService = {
 
     loadPhones(filter, callback) {
         let promise = this._sendRequest('/api/phones');
-        promise.then((phones) => {
-            const filteredPhones = this._search(phones,filter.query);
-            const sortedPhones = this._sorting(filteredPhones, filter.sort);
 
-            callback(sortedPhones);
-        });
+        let promise2 = promise
+            .then((phones) => {
+                const filteredPhones = this._filter(phones, filter.query);
+                const sortedPhones = this._sort(filteredPhones, filter.order);
 
-        setTimeout(() => {
-            promise.then((phones) => console.log(phones));
-        }, 2000);
+                return sortedPhones;
+            });
+
+        return promise2;
     },
 
 
     loadPhone(phoneId, callback) {
-       const promise = this._sendRequest(`/api/phones/${ phoneId }`);
-       promise.then(callback);
+       return this._sendRequest(`/api/phones/${ phoneId }`);
+
 
     },
 
     _sendRequest(url) {
-        let promise = {
-            _successCallbacks: [],
-            _errorCallbacks:[],
-            _status:'pending',
-            _result: null,
+        return new Promise(
+            (resolve, reject) => {
+                let xhr = new XMLHttpRequest();
 
-            then(callback) {
-                if(this._status === 'fulfilled') {
-                    callback(this._result);
-                } else {
-                    this._successCallbacks.push(callback);
-                }
-            },
-            catch() {
-                this._errorCallbacks.push(callback);
-            },
-            resolve(data) {
-                this._status = 'fulfilled';
-                this._result = data;
-                this._successCallbacks.forEach((callback) => {
-                    callback(data);
-                })
-            },
-            reject(error) {
-                this._status = 'rejected';
-                this._result = error;
-                this._errorCallbacks.forEach((callback) => {
-                    callback(error);
-                })
+                xhr.open('GET', url, true);
+
+                xhr.send();
+
+                xhr.onload = () => {
+                    let data = JSON.parse(xhr.responseText);
+
+                    resolve(data);
+                };
+
+                xhr.onerror = () => {
+                    reject(xhr.status + xhr.statusText);
+                };
             }
-        };
-        let xhr = new XMLHttpRequest();
-
-        xhr.open('GET', url, true);
-
-        xhr.send();
-
-        xhr.onload = () => {
-            let data = JSON.parse(xhr.responseText);
-            promise.resolve(data);
-        };
-
-        xhr.onerror = () => {
-            promise.reject(xhr.status + xhr.statusText);
-        }
-        return promise;
+        );
     },
 
     _sorting(phones, sort) {

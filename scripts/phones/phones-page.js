@@ -51,7 +51,7 @@ export default class PhonesPage {
 
     }
 
-    _refreshPhones() {
+    async  _refreshPhones() {
         const callback = (phones) => {
             this._catalog.setPhones(phones);
         };
