@@ -1,21 +1,53 @@
-'use strict';
+'use strict'
 
 export default class Sorter {
-    constructor ({element}) {
-        this._element = element;
 
+    constructor(element) {
+        this._element = element;
         this._render();
+        this._onInput = this._onInput.bind(this);
+        this._element.addEventListener('input', this._onInput);
+        this.currentFilterFunction = this._chooseSort('age');
     }
+
+    sort(phones) {
+        return phones.sort(this.currentFilterFunction);
+    }   
 
     _render() {
         this._element.innerHTML = `
-        <p>
             Sort by:
-            <select data-component="phones-filter">
-              <option value="name">Alphabetical</option>
-              <option value="age">Newest</option>
+            <select>
+            <option value="name">Alphabetical</option>
+            <option value="age" selected>Newest</option>
             </select>
-          </p>
         `;
     }
+
+    _onInput(event) {   
+        
+        this.currentFilterFunction = this._chooseSort(event.target.value);
+
+        let customEvent = new CustomEvent('filterUpdate', {
+            bubbles: true
+        });
+        this._element.dispatchEvent(customEvent);
+    }
+
+    _chooseSort(name) {
+        switch (name) {
+            case 'name':
+            return function(a, b) {
+                if(a.id < b.id) return -1;
+                if(a.id > b.id) return 1;
+                return 0;
+            };
+            break;
+
+            case 'age':
+            return function(a, b) {
+                return +a.age - +b.age
+            }
+        }
+    };
 }

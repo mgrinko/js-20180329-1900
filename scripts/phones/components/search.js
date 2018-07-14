@@ -2,13 +2,11 @@
 
 export default class PhonesSearch {
 
-    constructor({element, phones}) {
+    constructor({element}) {
         this._element = element;
         this._render();
-        this.phones = phones;
-        this.updatedPhonesBase = [];
-        this._updatePhonesBase = this._updatePhonesBase.bind(this);
-        this._element.addEventListener('keyup', this._updatePhonesBase);
+        this._onKeyUp = this._onKeyUp.bind(this);
+        this._element.addEventListener('keyup', this._onKeyUp);
     }
 
     _render() {
@@ -16,25 +14,25 @@ export default class PhonesSearch {
         Search:
         <input>
         `
+        this._elementInput = this._element.querySelector('input');
     }
 
-    _updatePhonesBase(event) {
-        this.updatedPhonesBase = [];
-
-        for(let i = 0; i < this.phones.length; i++) {
-            let phoneName = this.phones[i].id.toLowerCase();
-            let inputValue = this.element.value.toLowerCase();
-            if(phoneName.indexOf(inputValue) !== -1) {
-                this.updatedPhonesBase .push(this.phones[i]);
-            }
-        }
-
-        let customEvent = new CustomEvent('searchUpdate', {
-            detail: this.updatedPhonesBase,
+    _onKeyUp() {
+        let customEvent = new CustomEvent('filterUpdate', {
             bubbles: true
-        })
+        });
+        this._element.dispatchEvent(customEvent);
+    }
 
-        this.element.dispatchEvent(customEvent);
-        
+    search(phones) {
+        let updatedPhonesBase = [];
+        for(let i = 0; i < phones.length; i++) {
+            let phoneName = phones[i].name.toLowerCase();
+            let inputValue = this._elementInput.value.toLowerCase();
+            if(phoneName.indexOf(inputValue) !== -1) {
+                updatedPhonesBase.push(phones[i]);
+            }
+        } 
+        return updatedPhonesBase;
     }
 };

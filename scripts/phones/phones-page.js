@@ -3,7 +3,7 @@
 import PhonesService from './services/phones-service.js';
 import PhonesCatalogue from './components/phones-catalog.js';
 import PhonesSearch from './components/search.js';
-import PhonesFilter from './components/phones-filter.js';
+import Sorter from './components/sorter.js';
 import ShoppingCart from './components/shopping-cart.js';
 import PhoneViewer from './components/phone-viewer.js';
 
@@ -11,19 +11,19 @@ export default class PhonesPage {
   constructor({ element }) {
     this._element = element;
 
-    this._phonesBase = PhonesService.getPhones();
+    PhonesService.loadPhones((phones) => {
+      this._catalogue.setPhones(phones);
+    });
 
     this._catalogue = new PhonesCatalogue({
       element: this._element.querySelector('[data-component="phones-catalog"]'),
-      phones: this._phonesBase,
     });
 
     this._search = new PhonesSearch({
       element: document.querySelector('[data-component="phones-search"]'),
-      phones: PhonesService.getPhones()
     });
 
-    this._filter= new PhonesFilter(
+    this._sorter= new Sorter(
       document.querySelector('[data-component="phones-filter"')
     );
 
@@ -37,32 +37,42 @@ export default class PhonesPage {
 
     this._catalogue.on('phoneSelected', (event) => {
       let phoneId = event.detail;
-       this._catalogue.hide();
-       this._viewer.show();
+      PhonesService.loadPhone(phoneId, (phone) => {
+        this._catalogue.hide();
+        this._viewer.show(phone);
+      })
     });
 
     this._catalogue.on('add', (event) => {
-      console.log(event.detail);
       this._cart.addItem(event.detail);
-   });
+    });
 
-    this._viewer.on('back', (event) => {
+    this._viewer.on('add', (event) => {
+      this._cart.addItem(event.detail);
+    });
+
+    this._viewer.on('back', () => {
       this._catalogue.show();
       this._viewer.hide();
     });
 
-    this._element.addEventListener('searchUpdate', (event) => {
-      this._phonesBase = event.detail;
-      this._catalogue.updateCatalogue(this._phonesBase);
+    this._cart.on('remove', (event) => {
+      this._cart.removeItem(event.detail);
     });
 
-    this._element.addEventListener('sortUpdate', (event) => {
-      let sortSelected = event.detail;
-      this._phonesBase.sort(sortSelected);
-      this._catalogue.updateCatalogue(this._phonesBase);
+    this._element.addEventListener('filterUpdate', (event) => {
+      PhonesService.loadPhones((phones) => {
+        this._catalogue.setPhones(phones);
+      },
+      (phones) => {
+        return this._search.search(phones);
+      },
+      (phones) => {
+        return this._sorter.sort(phones);
+      }
+    )
 
     });
-
 
   }
 }

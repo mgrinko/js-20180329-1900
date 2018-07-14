@@ -110,3 +110,12 @@ h1 {
   align-items:center;
 }
 
+[data-element = "remove"] {
+  font-size: 16px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.cart__item > * {
+  display: inline-block;
+}

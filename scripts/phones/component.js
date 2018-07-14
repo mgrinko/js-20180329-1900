@@ -22,7 +22,6 @@ export default class Component {
         let customEvent = new CustomEvent(eventName, { detail });
 
         this._element.dispatchEvent(customEvent);
-        console.log(customEvent.detail);
     }
 
     

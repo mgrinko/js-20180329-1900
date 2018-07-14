@@ -1,18 +1,41 @@
 'use strict'
 
-export default class ShoppingCart {
+import Component from'../component.js';
+
+export default class ShoppingCart extends Component {
     constructor ({element}) {
-        this._element = element;
+        super({element});
         this._items = [];
         this._render();
+        this._element.addEventListener('click', this._onClick.bind(this));
     };
+
+    _onClick(event) {
+        let removeButton = event.target.closest('[data-element = "remove"]');
+
+        if(removeButton) {
+            let itemToRemove = event.target.closest('li');
+            this._trigger('remove', itemToRemove);
+        }
+    }
+
+    removeItem(item) {
+        let itemName = item.querySelector('.cart__item-name').textContent;
+        let itemNum = this._items.indexOf(itemName);
+
+        if(itemNum != -1) {
+            this._items.splice(itemNum, 1);
+        }
+
+        item.remove();
+    }
 
     addItem(item) {
         this._items = [
             ...this._items,
             item
         ];
-        
+
         this._render();
     };
 
@@ -33,10 +56,8 @@ export default class ShoppingCart {
         let html = '';
 
         for (let item of this._items) {
-            html += `<li>${item}</li>`;
+            html += `<li class="cart__item"><p class="cart__item-name">${item}<p><span data-element="remove">☓<span></li>`;
         }
-
-        console.log(html);
 
         return html;
     }
