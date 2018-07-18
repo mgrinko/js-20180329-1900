@@ -53,13 +53,14 @@ class MyPromise {
 
 const PhonesService = {
 
-    loadPhones(filter, callback) {
+    loadPhones(filter) {
         let promise = this._sendRequest('/api/phones');
 
+        debugger;
         let promise2 = promise
             .then((phones) => {
-                const filteredPhones = this._filter(phones, filter.query);
-                const sortedPhones = this._sort(filteredPhones, filter.order);
+                const filteredPhones = this._search(phones, filter.query);
+                const sortedPhones = this._sorting(filteredPhones, filter.order);
 
                 return sortedPhones;
             });
@@ -68,7 +69,7 @@ const PhonesService = {
     },
 
 
-    loadPhone(phoneId, callback) {
+    loadPhone(phoneId) {
        return this._sendRequest(`/api/phones/${ phoneId }`);
 
 
