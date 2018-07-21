@@ -2,15 +2,15 @@
 
 
 const PhonesService = {
-  loadPhones(callback, search, filter) {
-    this._sendRequest(`api/phones`, callback, search, filter);
+  loadPhones(callback, search, sort) {
+    this._sendRequest(`https://surho.github.io/js-20180329-1900/api/phones`, callback, search, sort);
   },
 
   loadPhone(phoneId, callback) {
-    this._sendRequest(`api/phones/${phoneId}`, callback)
+    this._sendRequest(`https://surho.github.io/js-20180329-1900//api/phones/${phoneId}`, callback)
   },
 
-_sendRequest(url, callback, search, filter, {method = 'GET'} = {} ) {
+_sendRequest(url, callback, search, sort, {method = 'GET'} = {} ) {
 
     let xhr = new XMLHttpRequest;
 
@@ -21,10 +21,11 @@ _sendRequest(url, callback, search, filter, {method = 'GET'} = {} ) {
     xhr.onload = () => {
 
       let data = JSON.parse(xhr.responseText);
-      if(filter) data = filter(data)
+      if(sort) data = sort(data)
       if(search) data = search(data);
 
       callback(data);
+      
     }
   }
 };
