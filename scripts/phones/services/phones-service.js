@@ -3,11 +3,11 @@
 
 const PhonesService = {
   loadPhones(callback, search, sort) {
-    this._sendRequest(`https://surho.github.io/js-20180329-1900/api/phones`, callback, search, sort);
+    this._sendRequest(`http://localhost:3000//api/phones.json`, callback, search, sort);
   },
 
   loadPhone(phoneId, callback) {
-    this._sendRequest(`https://surho.github.io/js-20180329-1900//api/phones/${phoneId}`, callback)
+    this._sendRequest(`http://localhost:3000///api/phones/${phoneId}.json`, callback)
   },
 
 _sendRequest(url, callback, search, sort, {method = 'GET'} = {} ) {
