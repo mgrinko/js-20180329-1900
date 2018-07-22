@@ -1,20 +1,23 @@
 'use strict';
 
+const BASE_API_URL = 'https://surho.github.io/js-20180329-1900/api'
 
 const PhonesService = {
   loadPhones(callback, search, sort) {
-    this._sendRequest(`http://localhost:3000//api/phones.json`, callback, search, sort);
+    this._sendRequest(`/phones`, callback, search, sort);
   },
 
   loadPhone(phoneId, callback) {
-    this._sendRequest(`http://localhost:3000///api/phones/${phoneId}.json`, callback)
+    this._sendRequest(`/phones/${phoneId}`, callback)
   },
 
 _sendRequest(url, callback, search, sort, {method = 'GET'} = {} ) {
 
     let xhr = new XMLHttpRequest;
 
-    xhr.open('GET', url, true);
+    let fullUrl = BASE_API_URL + url + '.json';
+
+    xhr.open('GET', fullUrl, true);
 
     xhr.send();
 

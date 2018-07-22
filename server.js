@@ -12,7 +12,6 @@ var file = new static.Server('.', {
 
 function accept(req, res) {
   if (req.url.startsWith('/api')) {
-    req.url += '.json';
     setTimeout(() => {
       file.serve(req, res);
     }, 1000);
