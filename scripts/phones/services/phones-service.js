@@ -1,17 +1,63 @@
 'use strict';
 
-const BASE_API_URL = 'https://surho.github.io/js-20180329-1900/api'
+const BASE_API_URL = 'https://surho.github.io/js-20180329-1900/api';
 
 const PhonesService = {
-  loadPhones(callback, search, sort) {
-    this._sendRequest(`/phones`, callback, search, sort);
+  loadPhones(filter ,callback) {
+    this._sendRequest(`/phones`, (data) => {
+      let searchedPhones = this.search(filter, data);
+      let sortedPhones = this.sort(filter, searchedPhones);
+      callback(sortedPhones);
+    });
   },
 
   loadPhone(phoneId, callback) {
-    this._sendRequest(`/phones/${phoneId}`, callback)
+    this._sendRequest(`/phones/${phoneId}`, callback);
   },
 
-_sendRequest(url, callback, search, sort, {method = 'GET'} = {} ) {
+  sort(searchOptions, phones) {
+        let sortedPhones = [];
+        if(searchOptions.order === 'name') {
+            sortedPhones = phones.sort((a, b) => {
+            if(a.id < b.id) return -1;
+            if(a.id > b.id) return 1;
+            return 0;
+          });
+        }
+
+        if(searchOptions.order === 'age') {
+          sortedPhones = phones.sort((a, b) => {
+              return +a.age - +b.age
+          });
+        }
+        return sortedPhones;
+  },
+
+  search(searchOptions, phones) {
+    let searchedPhones = [];
+    for(let i = 0; i < phones.length; i++) {
+        let phoneName = phones[i].name.toLowerCase();
+        let inputValue = searchOptions.searchValue.toLowerCase();
+        if(phoneName.indexOf(inputValue) !== -1) {
+          searchedPhones.push(phones[i]);
+        }
+    } 
+
+    return searchedPhones;
+  },
+
+  updatePhonesBase(searchOptions, phones) {
+
+    let updatedPhoneBase = [];
+
+    updatedPhoneBase = this.search(searchOptions, phones);
+    updatedPhoneBase = this.sort(searchOptions, updatedPhoneBase);
+
+    return updatedPhoneBase;
+  },
+
+
+_sendRequest(url, callback, {method = 'GET'} = {} ) {
 
     let xhr = new XMLHttpRequest;
 
@@ -24,8 +70,6 @@ _sendRequest(url, callback, search, sort, {method = 'GET'} = {} ) {
     xhr.onload = () => {
 
       let data = JSON.parse(xhr.responseText);
-      if(sort) data = sort(data)
-      if(search) data = search(data);
 
       callback(data);
       

@@ -1,9 +1,11 @@
-'use strict'
+'use strict';
+import Component from "../component.js";
 
-export default class PhonesSearch {
+export default class PhonesSearch extends Component {
 
     constructor({element}) {
-        this._element = element;
+        super({element});
+
         this._render();
         this._onKeyUp = this._onKeyUp.bind(this);
         this._element.addEventListener('keyup', this._onKeyUp);
@@ -18,21 +20,7 @@ export default class PhonesSearch {
     }
 
     _onKeyUp() {
-        let customEvent = new CustomEvent('filterUpdate', {
-            bubbles: true
-        });
-        this._element.dispatchEvent(customEvent);
-    }
-
-    search(phones) {
-        let updatedPhonesBase = [];
-        for(let i = 0; i < phones.length; i++) {
-            let phoneName = phones[i].name.toLowerCase();
-            let inputValue = this._elementInput.value.toLowerCase();
-            if(phoneName.indexOf(inputValue) !== -1) {
-                updatedPhonesBase.push(phones[i]);
-            }
-        } 
-        return updatedPhonesBase;
+        let elementInputValue = this._elementInput.value;
+        this._trigger('userSearchUpdate', elementInputValue);
     }
 };
