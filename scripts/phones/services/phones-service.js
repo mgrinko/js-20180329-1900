@@ -1,18 +1,24 @@
+import { resolve } from "path";
+
 'use strict';
 
 const BASE_API_URL = 'https://surho.github.io/js-20180329-1900/api';
 
 const PhonesService = {
-  loadPhones(filter ,callback) {
-    this._sendRequest(`/phones`, (data) => {
+  loadPhones(filter) {
+    this._sendRequest(`/phones`)
+    .then((data) => {
       let searchedPhones = this.search(filter, data);
       let sortedPhones = this.sort(filter, searchedPhones);
-      callback(sortedPhones);
+      return sortedPhones;
     });
   },
 
-  loadPhone(phoneId, callback) {
-    this._sendRequest(`/phones/${phoneId}`, callback);
+  loadPhone(phoneId) {
+    this._sendRequest(`/phones/${phoneId}`)
+    .then(() => {
+      return phone;
+    })
   },
 
   sort(searchOptions, phones) {
@@ -46,36 +52,37 @@ const PhonesService = {
     return searchedPhones;
   },
 
-  updatePhonesBase(searchOptions, phones) {
+  // updatePhonesBase(searchOptions, phones) {
 
-    let updatedPhoneBase = [];
+  //   let updatedPhoneBase = [];
 
-    updatedPhoneBase = this.search(searchOptions, phones);
-    updatedPhoneBase = this.sort(searchOptions, updatedPhoneBase);
+  //   updatedPhoneBase = this.search(searchOptions, phones);
+  //   updatedPhoneBase = this.sort(searchOptions, updatedPhoneBase);
 
-    return updatedPhoneBase;
-  },
+  //   return updatedPhoneBase;
+  // },
 
 
-_sendRequest(url, callback, {method = 'GET'} = {} ) {
+  _sendRequest(url) {
+    return new Promise(() => {
+      let xhr = new XMLHttpRequest;
 
-    let xhr = new XMLHttpRequest;
+      let fullUrl = BASE_API_URL + url + '.json';
 
-    let fullUrl = BASE_API_URL + url + '.json';
+      xhr.open('GET', fullUrl, true);
 
-    xhr.open('GET', fullUrl, true);
+      xhr.send();
 
-    xhr.send();
+      xhr.onload = () => {
 
-    xhr.onload = () => {
+        let data = JSON.parse(xhr.responseText);
 
-      let data = JSON.parse(xhr.responseText);
-
-      callback(data);
-      
-    }
+        resolve(data)    
+      }
+    })
   }
 };
+
 
 
 

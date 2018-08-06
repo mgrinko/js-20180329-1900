@@ -22,7 +22,7 @@ export default class PhonesPage {
     this._initCart();
     this._initViewer();
     this._refreshPhones();
-    
+
   }
 
   _initViewer() {
@@ -89,21 +89,18 @@ export default class PhonesPage {
       this._cart.addItem(event.detail);
     });
 
-    this._catalogue.on('phoneSelected', (event) => {
+    this._catalogue.on('phoneSelected', async (event) => {
       let phoneId = event.detail;
-      PhonesService.loadPhone(phoneId, (phone) => {
-        this._catalogue.hide();
-        this._viewer.show(phone);
-      })
+      let phone = await PhonesService.loadPhone(phoneId)
+      this._catalogue.hide();
+      this._viewer.show(phone);
     });
 
   }
 
-  _refreshPhones() {
-    const callback = (phones) => {
-      this._catalogue.setPhones(phones);
-    } 
-    PhonesService.loadPhones(this._filter, callback);
+  async _refreshPhones() {
+    let phones = PhonesService.loadPhones(this._filter);
+    this._catalogue.setPhones(phones);
   };
 }
 
