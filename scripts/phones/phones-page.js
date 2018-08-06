@@ -99,7 +99,7 @@ export default class PhonesPage {
   }
 
   async _refreshPhones() {
-    let phones = PhonesService.loadPhones(this._filter);
+    let phones = await PhonesService.loadPhones(this._filter);
     this._catalogue.setPhones(phones);
   };
 }
