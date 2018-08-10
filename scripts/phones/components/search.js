@@ -8,7 +8,7 @@ export default class PhonesSearch extends Component {
 
         this._render();
         this._onKeyUp = this._onKeyUp.bind(this);
-        this._element.addEventListener('keyup', this._onKeyUp);
+        this.on('keyup', this._onKeyUp);
     }
 
     _render() {

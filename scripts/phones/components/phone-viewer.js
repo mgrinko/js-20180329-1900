@@ -8,9 +8,9 @@ export default class PhoneViewer extends Component {
         super({element})
 
         this._phone = null;
-        this._element.addEventListener('click', this._onBackButtonClick.bind(this));
-        this._element.addEventListener('click', this._onAddButtonClick.bind(this));
-        this._element.addEventListener('click', this._onThumbClick.bind(this));
+        this.on('click', this._onBackButtonClick.bind(this), '[data-element="back-button"');
+        this.on('click', this._onAddButtonClick.bind(this), '[data-element="add-button"]');
+        this.on('click', this._onThumbClick.bind(this), '.phone-item');
     }
 
     show(phone) {
@@ -19,32 +19,20 @@ export default class PhoneViewer extends Component {
       this._render();
     }
 
-    _onBackButtonClick() {
-        let backButton = event.target.closest('[data-element="back-button"');
-
-        if(!backButton) {
-            return;
-        }
-        
+    _onBackButtonClick() {        
         this._trigger('back');
     }
 
-    _onAddButtonClick(event) {
-      let addButton = event.target.closest('[data-element="add-button"]');
-  
-      if (!addButton) {
-        return;
-      };
-  
+    _onAddButtonClick() {
       this._trigger('add', this._phone.name);
     }
 
     _onThumbClick() {
-      if(event.target.closest('.phone-thumbs')) {
         let thumbImage = event.target.closest('img');
-        let bigImage = document.querySelector('.phone');
-        bigImage.src = thumbImage.src;
-      }
+        if(thumbImage) {
+          let bigImage = document.querySelector('.phone');
+          bigImage.src = thumbImage.src;
+        } 
     }
 
     
@@ -66,7 +54,7 @@ export default class PhoneViewer extends Component {
       
           <ul class="phone-thumbs">
             ${this._phone.images.map((phone) => {
-              return`<li><img src="${phone}"></li>`;
+              return`<li class=phone-item><img src="${phone}"></li>`;
             }).join('')
             }
           </ul>

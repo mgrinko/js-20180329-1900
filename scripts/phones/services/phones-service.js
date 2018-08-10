@@ -1,11 +1,11 @@
 
 'use strict';
 
-const BASE_API_URL = 'https://surho.github.io/js-20180329-1900/api';
+import HttpService from './http-request.js'
 
 const PhonesService = {
   async loadPhones(filter) {
-    let phones = await this._sendRequest(`/phones`);
+    let phones = await HttpService.send(`/phones`);
     let searchedPhones = this.search(filter, phones);
     let sortedPhones = this.sort(filter, searchedPhones);;
 
@@ -13,7 +13,7 @@ const PhonesService = {
   },
 
   async loadPhone(phoneId) {
-    let phone = await this._sendRequest(`/phones/${phoneId}`)
+    let phone = await HttpService.send(`/phones/${phoneId}`)
     return phone;
   },
 

@@ -7,16 +7,13 @@ export default class ShoppingCart extends Component {
         super({element});
         this._items = [];
         this._render();
-        this._element.addEventListener('click', this._onClick.bind(this));
+        this.on('click', this._onClick.bind(this), '[data-element = "remove"]');
     };
 
     _onClick(event) {
-        let removeButton = event.target.closest('[data-element = "remove"]');
+        let itemToRemove = event.target.closest('li');
+        this._trigger('remove', itemToRemove);
 
-        if(removeButton) {
-            let itemToRemove = event.target.closest('li');
-            this._trigger('remove', itemToRemove);
-        }
     }
 
     removeItem(item) {
